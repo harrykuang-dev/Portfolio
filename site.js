@@ -6,7 +6,35 @@ document.querySelectorAll('details').forEach(details => {
   if (!summary) return;
   const content = document.createElement('div');
   content.className = 'disclosure-content';
-  while (summary.nextSibling) content.append(summary.nextSibling);
+  const surface = document.createElement('div');
+  surface.className = 'disclosure-surface';
+  while (summary.nextSibling) surface.append(summary.nextSibling);
+  const footer = document.createElement('div');
+  footer.className = 'disclosure-footer';
+  const collapse = document.createElement('button');
+  collapse.type = 'button';
+  collapse.className = 'collapse-button';
+  const language = document.documentElement.lang.toLowerCase();
+  const label = language === 'zh-hant' ? '收起' : language.startsWith('zh') ? '收起' : 'Collapse';
+  collapse.textContent = label;
+  const chevron = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
+  chevron.setAttribute('viewBox', '0 0 16 16');
+  chevron.setAttribute('aria-hidden', 'true');
+  chevron.innerHTML = '<path d="m4 10 4-4 4 4" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>';
+  collapse.append(chevron);
+  collapse.addEventListener('click', () => {
+    if (!expanded) return;
+    summary.focus({ preventScroll: true });
+    // Return to the owning heading before a long panel disappears, keeping
+    // the next item in view and avoiding a jump to an unrelated page section.
+    if (summary.getBoundingClientRect().top < 0) {
+      summary.scrollIntoView({ block: 'start', behavior: 'instant' });
+    }
+    summary.click();
+  });
+  footer.append(collapse);
+  surface.append(footer);
+  content.append(surface);
   details.append(content);
   let animation;
   let expanded = details.open;
