@@ -116,3 +116,65 @@ if (creatorVideos) {
     });
   });
 }
+
+// Warm compressed previews one at a time, after the initial page has settled.
+// Use the real image elements so responsive selection and decoded images are
+// reused when a disclosure opens; originals are never requested here.
+(() => {
+  const connection = navigator.connection;
+  const constrained = () => connection?.saveData || /(^|-)2g$/.test(connection?.effectiveType || '');
+  const images = [...document.querySelectorAll('img[loading="lazy"]')];
+  let lastInteraction = performance.now();
+  for (const event of ['pointerdown', 'touchstart', 'keydown', 'scroll']) {
+    window.addEventListener(event, () => { lastInteraction = performance.now(); }, { passive: true });
+  }
+  const idle = callback => {
+    if ('requestIdleCallback' in window) window.requestIdleCallback(callback);
+    else window.setTimeout(callback, 200);
+  };
+  let index = 0;
+  let started = false;
+  const next = () => {
+    if (index >= images.length) return;
+    window.setTimeout(() => idle(() => {
+      if (document.hidden || constrained() || performance.now() - lastInteraction < 1200) {
+        next();
+        return;
+      }
+      const image = images[index++];
+      if (image.complete && image.naturalWidth) { next(); return; }
+      let done = false;
+      const finish = () => {
+        if (done) return;
+        done = true;
+        image.removeEventListener('load', finish);
+        image.removeEventListener('error', finish);
+        next();
+      };
+      image.addEventListener('load', finish, { once: true });
+      image.addEventListener('error', finish, { once: true });
+      image.fetchPriority = 'low';
+      image.decoding = 'async';
+      image.loading = 'eager';
+      if (image.complete) finish();
+    }), 350);
+  };
+  const start = () => {
+    if (started) return;
+    started = true;
+    next();
+    // Establish connections without running hidden third-party players, which
+    // can consume CPU and bandwidth even when the browser is otherwise idle.
+    idle(() => {
+      if (constrained() || document.hidden) return;
+      for (const href of ['https://www.instagram.com', 'https://www.facebook.com', 'https://player.bilibili.com']) {
+        const link = document.createElement('link');
+        link.rel = 'preconnect';
+        link.href = href;
+        document.head.append(link);
+      }
+    });
+  };
+  if (document.readyState === 'complete') start();
+  else window.addEventListener('load', start, { once: true });
+})();
