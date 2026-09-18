@@ -22,4 +22,11 @@
 
 .creator-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:1.2rem;padding-bottom:2rem}.bilibili-player{width:100%;aspect-ratio:16/9;border:0;display:block;background:var(--soft)}@media(max-width:700px){.creator-grid{grid-template-columns:1fr}}
 
-.employer-links{display:flex;align-items:flex-start;flex-wrap:wrap;gap:.4rem 1.5rem}.account-analytics>summary{min-height:0;justify-content:flex-start}.account-analytics[open]{flex-basis:100%}.analytics-gallery{display:grid;gap:1.5rem;padding:1.2rem 0}.project-heading:has(.account-analytics[open]){flex-wrap:wrap}.project-heading:has(.account-analytics[open])>div{width:100%}
+.employer-links{display:flex;align-items:flex-start;flex-wrap:wrap;gap:.4rem 1.5rem}.account-analytics>summary{min-height:0;justify-content:flex-start}.account-analytics{flex-basis:100%}.analytics-gallery{display:grid;gap:1.5rem;padding:1.2rem 0}.project-heading:has(.account-analytics){flex-wrap:wrap}.project-heading:has(.account-analytics)>div{width:100%}
+
+/* Flow-root contains child margins so measured heights remain stable. */
+.disclosure-content{display:flow-root}
+details>summary>span[aria-hidden="true"]{display:inline-block;transition:transform 360ms cubic-bezier(.22,1,.36,1);transform-origin:center}
+details[data-expanded="true"]>summary>span[aria-hidden="true"]{transform:rotate(45deg)}
+details[data-expanded="false"]>summary>span[aria-hidden="true"]{transform:rotate(0deg)}
+@media(prefers-reduced-motion:reduce){details>summary>span[aria-hidden="true"]{transition:none}}
