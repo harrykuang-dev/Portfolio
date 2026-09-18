@@ -25,6 +25,13 @@
 .employer-links{display:flex;align-items:flex-start;flex-wrap:wrap;gap:.4rem 1.5rem}.account-analytics>summary{min-height:0;justify-content:flex-start}.account-analytics{flex-basis:100%}.analytics-gallery{display:grid;gap:1.5rem;padding:1.2rem 0}.project-heading:has(.account-analytics){flex-wrap:wrap}.project-heading:has(.account-analytics)>div{width:100%}
 
 /* Flow-root contains child margins so measured heights remain stable. */
+.external-icon{display:inline-block;width:1em;height:1em;flex:none;vertical-align:-.125em}
+.creator-title-group{display:flex;align-items:center;flex-wrap:wrap;gap:.5rem 1.4rem;min-width:0}
+.creator-profile{display:inline-flex;align-items:center;gap:.4rem;min-height:2.75rem;color:var(--blue);font-size:.875rem;font-weight:400}
+.creator-profile:hover{text-decoration:underline;text-underline-offset:.25em}
+.creator-meta{margin-left:auto;text-align:right;color:var(--muted);font-size:.875rem;font-weight:400;line-height:1.7;flex:none}
+.creator-meta>span{display:block}
+@media(max-width:450px){.creator-toggle{gap:.7rem}.creator-title-group{column-gap:.8rem;row-gap:0;flex:1}.creator-meta{font-size:.75rem}.creator-profile{font-size:.8125rem;margin-left:2.1rem}.creator-toggle .toggle-mark{font-size:1.5rem}}
 .disclosure-content{display:flow-root}
 details>summary>span[aria-hidden="true"]{display:inline-block;transition:transform 360ms cubic-bezier(.22,1,.36,1);transform-origin:center}
 details[data-expanded="true"]>summary>span[aria-hidden="true"]{transform:rotate(45deg)}
